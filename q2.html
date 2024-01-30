@@ -1,0 +1,31 @@
+Write a procedure which will display all policy details having premium amount less than
+5000
+create or replace procedure pro (t in varchar)
+as cursor c15 is
+select prem_amt,p_dateor each row
+from client, policy , cp 
+where client.cno=cp.cno and policy.p_no=cp.p_no
+and prem_amt<5000;
+c c15%rowtype;
+begin
+open c15;
+dbms_output.put_line('prem_amt'||'  '||'p_date');
+loop
+fetch c15 into c;
+exit when c15%notfound;
+dbms_output.put_line(c.prem_amt||'  '||c.p_date);
+end if;
+end loop ;
+close c15;
+end;
+/
+
+set serveroutput on
+create or replace trigger t1 before insert or update on cp
+for each row
+begin
+if(:new.mat_amt < :new.prem_amt)then
+raise_application_error(-20001,'mat_amt>prem_amt');
+end if;
+end;
+/
